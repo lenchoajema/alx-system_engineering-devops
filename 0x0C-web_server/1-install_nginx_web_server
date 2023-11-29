@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Bash script that configures a new Ubuntu machine to respect below requirements
+# Installs nginx on web-01 server and listens on port 80
+#    Returns a page containing "Holberton School" via curl
+
+apt-get -y update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+# nginx listens to port 80 by default
+echo 'Hello World!' > /var/www/html/index.html
+service nginx start
