@@ -33,18 +33,12 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend http.lencenter.tech
+listen 51402-lb-01
 	bind *:80
-	mode http
-	http-request set-header X-Forwarded-Proto http
-	default_backend webservers
-
-frontend https.lencenter.tech
 	bind *:443 ssl crt /etc/letsencrypt/live/lencenter.tech/fullchain.pem
-	http-request set-header X-Forwarded-Proto https
-	default_backend webservers
-
-backend webservers
+	mode http
+	redirect scheme https code 301 if !{ ssl_fc }
 	balance roundrobin
-	server 266421-web-01 174.129.55.37:80 check
-	server 266421-web-02 100.24.253.93:80 check
+	option forwardfor
+	server :80 check
+	server :80 check
